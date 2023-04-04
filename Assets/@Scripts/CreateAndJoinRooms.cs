@@ -10,6 +10,15 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
     public Transform Content;
     public ListItem ItemPrefab;
 
+    private string NickName = "Player";
+
+    List<RoomInfo> AllRoomInfo = new List<RoomInfo>();
+
+    private string GetDefaultPlayerName()
+    {
+        return "Player" + Random.Range(0, 9999).ToString();
+    }
+
     public void CreateRoom()
     {
         if (!PhotonNetwork.IsConnected) return;
@@ -33,19 +42,32 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
         Debug.LogError($"Room failed");
     }
 
-    public override void OnRoomListUpdate(List<RoomInfo> roomList) 
+    public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
         foreach (RoomInfo info in roomList)
         {
+            for (int i = 0; i < AllRoomInfo.Count; i++)
+            {
+                if (AllRoomInfo[i].masterClientId == info.masterClientId) return;
+            }
+
             ListItem listItem = Instantiate(ItemPrefab, Content);
-            
+
             if (listItem != null)
+            {
                 listItem.SetInfo(info);
+                AllRoomInfo.Add(info);
+            }
         }
     }
 
     public override void OnJoinedRoom()
     {
+        if (NickName == "")
+            PhotonNetwork.NickName = GetDefaultPlayerName();
+        else
+            PhotonNetwork.NickName = NickName;
+
         PhotonNetwork.LoadLevel("Main");
     }
 
@@ -54,7 +76,7 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinRandomRoom();
     }
 
-    public void JoinButton() 
+    public void JoinButton()
     {
         PhotonNetwork.JoinRoom(RoomName.text);
     }

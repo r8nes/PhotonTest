@@ -7,6 +7,8 @@ public class ConnectionToServer : MonoBehaviourPunCallbacks
     public TMPro.TextMeshProUGUI Text;
     public Region region;
 
+    private string NickName = "";
+
     //вынести регион за пределы
     private void Start()
     {
@@ -17,11 +19,21 @@ public class ConnectionToServer : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         PhotonNetwork.JoinLobby();
+
+        if (NickName == "")
+            PhotonNetwork.NickName = GetDefaultPlayerName();
+        else
+            PhotonNetwork.NickName = NickName;
     }
 
     public override void OnJoinedLobby()
     {
         StartCoroutine(LoadLevelAsync());
+    }
+
+    private string GetDefaultPlayerName()
+    {
+        return "Player " + Random.Range(0, 9999).ToString();
     }
 
     private IEnumerator LoadLevelAsync()
