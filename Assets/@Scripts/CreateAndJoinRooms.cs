@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
 {
-    public TMP_InputField CreateInput;
+    public TMP_InputField RoomName;
     public Transform Content;
     public ListItem ItemPrefab;
 
@@ -19,7 +19,7 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
             MaxPlayers = 4
         };
 
-        PhotonNetwork.CreateRoom(CreateInput.text, roomOptions, TypedLobby.Default);
+        PhotonNetwork.CreateRoom(RoomName.text, roomOptions, TypedLobby.Default);
         PhotonNetwork.LoadLevel("Main");
     }
 
@@ -41,7 +41,21 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
             
             if (listItem != null)
                 listItem.SetInfo(info);
-            
         }
+    }
+
+    public override void OnJoinedRoom()
+    {
+        PhotonNetwork.LoadLevel("Main");
+    }
+
+    public void JoinRandomRoomButton()
+    {
+        PhotonNetwork.JoinRandomRoom();
+    }
+
+    public void JoinButton() 
+    {
+        PhotonNetwork.JoinRoom(RoomName.text);
     }
 }

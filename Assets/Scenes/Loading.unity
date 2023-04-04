@@ -615,6 +615,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Text: {fileID: 371467588}
+  region: 0
 --- !u!1 &1676257185
 GameObject:
   m_ObjectHideFlags: 0
